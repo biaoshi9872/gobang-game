@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网页五子棋小游戏</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>五子棋</h1>
+        <div class="game-info">
+            <div id="status" class="status">当前回合：<span id="current-player" class="black-piece-icon">黑子</span></div>
+            <button id="restart-btn" class="btn">重新开始</button>
+        </div>
+        <div class="board-container">
+            <canvas id="chess-board" width="600" height="600"></canvas>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
