@@ -15,12 +15,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      - name: Start SSH agent
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Prepare SSH key
+        run: |
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
 
       - name: Add server to known_hosts
         run: |
@@ -30,14 +30,14 @@ jobs:
 
       - name: Upload site files
         run: |
-          ssh "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+          ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
             "rm -rf /tmp/gobang-deploy && mkdir -p /tmp/gobang-deploy"
-          scp index.html style.css script.js \
+          scp -i ~/.ssh/deploy_key index.html style.css script.js \
             "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/gobang-deploy/"
 
       - name: Publish site
         run: |
-          ssh "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
+          ssh -i ~/.ssh/deploy_key "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" \
             "rm -rf /usr/share/nginx/html/* && \
              cp -f /tmp/gobang-deploy/* /usr/share/nginx/html/ && \
              nginx -t && \
